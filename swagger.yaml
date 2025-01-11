@@ -4,7 +4,7 @@ info:
   description: |-
     This is a list api of course FE
   contact:
-    email: lttd0204@gmail.com
+    email: botono123@gmail.com
   version: 1.0.11
 servers:
   - url: http://localhost:3001
@@ -38,7 +38,7 @@ paths:
                   example: admin@gmail.com
                 password:
                   type: string
-                  example: 123456789Kha@
+                  example: Aa@12345678
               required:
                 - email
                 - password
@@ -111,7 +111,7 @@ paths:
                   example: admin@gmail.com
                 password:
                   type: string
-                  example: 123456789Kha@
+                  example: Aa@12345678
               required:
                 - email
                 - password

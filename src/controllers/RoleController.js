@@ -23,7 +23,7 @@ const createRole = async (req, res) => {
       data,
       message,
       status: statusMessage,
-    });
+    }); 
   } catch (e) {
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
       message: "Internal Server Error",

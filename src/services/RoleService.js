@@ -43,6 +43,20 @@ const updateRole = (id, data) => {
       const checkRole = await Role.findOne({
         _id: id,
       });
+      if (data.name) {
+        const existedName = await Role.findOne({
+          name: data.name,
+        })
+        if (existedName !== null) {
+          resolve({
+            status: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.status,
+            message: "The name of role is existed",
+            typeError: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.type,
+            data: null,
+            statusMessage: "Error",
+          });
+        }
+      }
       if (!checkRole) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
@@ -153,7 +167,7 @@ const getAllRole = (params) => {
     try {
       const limit = params?.limit ? +params?.limit : 10;
       const search = params?.search ?? "";
-      const page = params?.page ?  +params.page :  1;
+      const page = params?.page ? +params.page : 1;
       const order = params?.order ?? "created desc";
       const query = {};
       if (search) {
