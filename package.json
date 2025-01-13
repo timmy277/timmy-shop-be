@@ -8,7 +8,7 @@
     "start": "nodemon src/index.js",
     "initDB": "node src/initDB.js && exit"
   },
-  "author": "",
+  "author": "timmy",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.0",
