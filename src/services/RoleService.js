@@ -47,6 +47,7 @@ const updateRole = (id, data) => {
         const existedName = await Role.findOne({
           name: data.name,
         })
+        // if (existedName !== null && existedName._id !== id)
         if (existedName !== null) {
           resolve({
             status: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.status,
@@ -57,7 +58,7 @@ const updateRole = (id, data) => {
           });
         }
       }
-      if (!checkRole) {
+      if (checkRole === null) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
           message: "The role is not existed",
