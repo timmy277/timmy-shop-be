@@ -459,18 +459,18 @@ const getAllProduct = (params) => {
               as: "reviews",
             },
           },
-          {
-            $addFields: {
-              averageRating: {
-                $ifNull: [{ $avg: "$reviews.star" }, 0],
-              },
-            },
-          },
-          {
-            $match: {
-              "reviews.star": { $gte: minStar, $lte: maxStar },
-            },
-          },
+          // {
+          //   $addFields: {
+          //     averageRating: {
+          //       $ifNull: [{ $avg: "$reviews.star" }, 0],
+          //     },
+          //   },
+          // },
+          // {
+          //   $match: {
+          //     "reviews.star": { $gte: minStar, $lte: maxStar },
+          //   },
+          // },
           {
             $lookup: {
               from: "producttypes",
