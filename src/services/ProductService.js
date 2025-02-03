@@ -676,55 +676,55 @@ const getAllProductPublic = (params) => {
       if (page === -1 && limit === -1) {
         const allProduct = await Product.aggregate([
           { $match: query },
-          {
-            $lookup: {
-              from: "reviews",
-              localField: "_id",
-              foreignField: "product",
-              as: "reviews",
-            },
-          },
-          {
-            $addFields: {
-              averageRating: {
-                $ifNull: [{ $avg: { $ifNull: ["$reviews.star", 0] } }, 0],
-                totalReviews: { $size: "$reviews" },
-              },
-            },
-          },
-          {
-            $match: {
-              $or: [
-                { averageRating: { $gte: minStar, $lte: maxStar } },
-                { averageRating: { $exists: false } },
-              ],
-            },
-          },
-          {
-            $lookup: {
-              from: "producttypes",
-              localField: "type",
-              foreignField: "_id",
-              as: "typeInfo",
-            },
-          },
-          {
-            $unwind: "$typeInfo",
-          },
-          {
-            $lookup: {
-              from: "cities",
-              localField: "location",
-              foreignField: "_id",
-              as: "locationInfo",
-            },
-          },
-          {
-            $unwind: "$locationInfo",
-          },
-          {
-            $project: fieldsToSelect,
-          },
+          // {
+          //   $lookup: {
+          //     from: "reviews",
+          //     localField: "_id",
+          //     foreignField: "product",
+          //     as: "reviews",
+          //   },
+          // },
+          // {
+          //   $addFields: {
+          //     averageRating: {
+          //       $ifNull: [{ $avg: { $ifNull: ["$reviews.star", 0] } }, 0],
+          //       totalReviews: { $size: "$reviews" },
+          //     },
+          //   },
+          // },
+          // {
+          //   $match: {
+          //     $or: [
+          //       { averageRating: { $gte: minStar, $lte: maxStar } },
+          //       { averageRating: { $exists: false } },
+          //     ],
+          //   },
+          // },
+          // {
+          //   $lookup: {
+          //     from: "producttypes",
+          //     localField: "type",
+          //     foreignField: "_id",
+          //     as: "typeInfo",
+          //   },
+          // },
+          // {
+          //   $unwind: "$typeInfo",
+          // },
+          // {
+          //   $lookup: {
+          //     from: "cities",
+          //     localField: "location",
+          //     foreignField: "_id",
+          //     as: "locationInfo",
+          //   },
+          // },
+          // {
+          //   $unwind: "$locationInfo",
+          // },
+          // {
+          //   $project: fieldsToSelect,
+          // },
         ]);
 
         resolve({
