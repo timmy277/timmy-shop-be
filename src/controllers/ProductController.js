@@ -262,6 +262,7 @@ const getAllProduct = async (req, res) => {
   try {
     const params = req.query;
     const response = await ProductService.getAllProduct(params);
+    console.log("response pr", {response})
     const { data, status, typeError, message, statusMessage } = response;
     return res.status(status).json({
       typeError,

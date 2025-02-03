@@ -517,56 +517,57 @@ const getAllProduct = (params) => {
         { $sort: sortOptions },
         { $skip: startIndex },
         { $limit: limit },
-        {
-          $lookup: {
-            from: "reviews",
-            localField: "_id",
-            foreignField: "product",
-            as: "reviews",
-          },
-        },
-        {
-          $addFields: {
-            averageRating: {
-              $ifNull: [{ $avg: { $ifNull: ["$reviews.star", 0] } }, 0],
-            },
-          },
-        },
-        {
-          $match: {
-            $or: [
-              { averageRating: { $gte: minStar, $lte: maxStar } },
-              { averageRating: { $exists: false } },
-            ],
-          },
-        },
-        {
-          $lookup: {
-            from: "producttypes",
-            localField: "type",
-            foreignField: "_id",
-            as: "typeInfo",
-          },
-        },
-        {
-          $unwind: "$typeInfo",
-        },
-        {
-          $lookup: {
-            from: "cities",
-            localField: "location",
-            foreignField: "_id",
-            as: "locationInfo",
-          },
-        },
-        {
-          $unwind: "$locationInfo",
-        },
-        {
-          $project: fieldsToSelect,
-        },
+        // {
+        //   $lookup: {
+        //     from: "reviews",
+        //     localField: "_id",
+        //     foreignField: "product",
+        //     as: "reviews",
+        //   },
+        // },
+        // {
+        //   $addFields: {
+        //     averageRating: {
+        //       $ifNull: [{ $avg: { $ifNull: ["$reviews.star", 0] } }, 0],
+        //     },
+        //   },
+        // },
+        // {
+        //   $match: {
+        //     $or: [
+        //       { averageRating: { $gte: minStar, $lte: maxStar } },
+        //       { averageRating: { $exists: false } },
+        //     ],
+        //   },
+        // },
+        // {
+        //   $lookup: {
+        //     from: "producttypes",
+        //     localField: "type",
+        //     foreignField: "_id",
+        //     as: "typeInfo",
+        //   },
+        // },
+        // {
+        //   $unwind: "$typeInfo",
+        // },
+        // {
+        //   $lookup: {
+        //     from: "cities",
+        //     localField: "location",
+        //     foreignField: "_id",
+        //     as: "locationInfo",
+        //   },
+        // },
+        // {
+        //   $unwind: "$locationInfo",
+        // },
+        // {
+        //   $project: fieldsToSelect,
+        // },
       ];
       const allProduct = await Product.aggregate(pipeline);
+      console.log("allProduct", allProduct);
 
       resolve({
         status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
