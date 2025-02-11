@@ -175,9 +175,7 @@ const logoutUser = async (req, res) => {
 
 const getAuthMe = async (req, res) => {
   try {
-    console.log("req", req.headers)
     const userId = req.userId;
-    console.log("userId", {userId})
     const response = await UserService.getDetailsUser(userId);
     const { data, status, typeError, message, statusMessage } = response;
     return res.status(status).json({

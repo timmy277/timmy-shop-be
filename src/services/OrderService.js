@@ -117,7 +117,7 @@ const createOrder = (newOrder) => {
         // await EmailService.sendEmailCreateOrder(email, orderItems);
       }
     } catch (e) {
-      //   console.log('e', e)
+        console.log('createOrder service', e)
       reject(e);
     }
   });
