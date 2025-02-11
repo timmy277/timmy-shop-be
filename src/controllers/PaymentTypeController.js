@@ -4,13 +4,22 @@ const PaymentTypeService = require("../services/PaymentTypeService");
 
 const createPaymentType = async (req, res) => {
   try {
-    const requiredFields = validateRequiredInput(req.body, ["name"]);
+    const requiredFields = validateRequiredInput(req.body, ["name", "type"]);
     const { type } = req.body;
+
     if (requiredFields?.length) {
       return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
         status: "Error",
         typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
         message: `The field ${requiredFields.join(", ")} is required`,
+        data: null,
+      });
+    }
+    if (!type) {
+      return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
+        status: "Error",
+        typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
+        message: "The field 'type' is required.",
         data: null,
       });
     }
@@ -25,6 +34,7 @@ const createPaymentType = async (req, res) => {
       });
     }
     const response = await PaymentTypeService.createPaymentType(req.body);
+    console.log("response", {response})
     const { data, status, typeError, message, statusMessage } = response;
     return res.status(status).json({
       typeError,
@@ -33,6 +43,7 @@ const createPaymentType = async (req, res) => {
       status: statusMessage,
     });
   } catch (e) {
+    console.log("eg", e)
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
       message: "Internal Server Error",
       data: null,
