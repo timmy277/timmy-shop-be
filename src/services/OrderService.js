@@ -189,7 +189,7 @@ const deleteOrderProduct = (id) => {
 
       resolve({
         message: "Order deleted successfully",
-        status: CONFIG_MESSAGE_ERRORS.AC.status,
+        status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
         typeError: "",
         statusMessage: "Success",
         data: deletedOrder,
