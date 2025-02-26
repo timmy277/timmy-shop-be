@@ -126,7 +126,7 @@ const createOrder = (newOrder) => {
 const getOrderDetails = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const checkOrder = await checkOrder.findById({
+      const checkOrder = await Order.findById({
         _id: id,
       });
       if (checkOrder === null) {
