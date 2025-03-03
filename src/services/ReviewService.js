@@ -263,6 +263,7 @@ const getAllReview = (params) => {
       const fieldsToSelect = {
         content: 1,
         star: 1,
+        product: 1,
         user: 1,
       };
 
@@ -272,7 +273,10 @@ const getAllReview = (params) => {
           .select(fieldsToSelect)
           .populate({
             path: "user",
-            select: "avatar firstName lastName middleName",
+            select: "avatar firstName lastName middleName _id",
+          }, {
+            path: "product",
+            select: "name _id",
           });
 
         resolve({
@@ -296,7 +300,10 @@ const getAllReview = (params) => {
         .select(fieldsToSelect)
         .populate({
           path: "user",
-          select: "avatar firstName lastName middleName",
+          select: "avatar firstName lastName middleName _id",
+        }, {
+          path: "product",
+          select: "name _id",
         });
       resolve({
         status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
