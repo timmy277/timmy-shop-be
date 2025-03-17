@@ -456,12 +456,12 @@ const getAllOrderOfMe = (userId, params) => {
         // createdAt: 1,
         orderItems: 1,
         shippingAddress: 1,
-        // paymentMethod: 1,
-        // deliveryMethod: 1,
-        // itemsPrice: 1,
-        // shippingPrice: 1,
+        paymentMethod: 1,
+        deliveryMethod: 1,
+        itemsPrice: 1,
+        shippingPrice: 1,
         totalPrice: 1,
-        // user: 1,
+        user: 1,
         isPaid: 1,
         paidAt: 1,
         deliveryAt: 1,
@@ -509,7 +509,7 @@ const getDetailsOrderOfMe = (userId, orderId) => {
   return new Promise(async (resolve, reject) => {
     try {
       try {
-        const checkOrder = await checkOrder.findById({
+        const checkOrder = await Order.findById({
           _id: orderId,
         });
         if (checkOrder === null) {
@@ -522,10 +522,11 @@ const getDetailsOrderOfMe = (userId, orderId) => {
           });
           return;
         }
-        if (checkOrder.user !== userId) {
+
+        if (checkOrder.user.toString() !== userId) {
           resolve({
             status: CONFIG_MESSAGE_ERRORS.UNAUTHORIZED.status,
-            message: "You no has permission",
+            message: "You has no permission",
             typeError: CONFIG_MESSAGE_ERRORS.UNAUTHORIZED.type,
             data: null,
             statusMessage: "Error",

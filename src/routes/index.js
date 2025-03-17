@@ -24,6 +24,7 @@ const routes = (app) => {
   app.use("/api/delivery-type", DeliveryTypeRouter);
   app.use("/api/payment-type", PaymentTypeRouter);
   app.use("/api/report", ReportRouter);
+
 };
 
 module.exports = routes;

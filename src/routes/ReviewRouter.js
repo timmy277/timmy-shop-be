@@ -6,16 +6,17 @@ const { CONFIG_PERMISSIONS } = require("../configs");
 
 router.post("/", ReviewController.createReview);
 
-router.put(
-  "/:id",
-  AuthPermission(CONFIG_PERMISSIONS.MANAGE_ORDER.REVIEW.UPDATE),
-  ReviewController.updateReview
-);
 
 router.put(
   "/me/:id",
   AuthPermission("", true),
   ReviewController.updateReviewMine
+);
+
+router.put(
+  "/:id",
+  AuthPermission(CONFIG_PERMISSIONS.MANAGE_ORDER.REVIEW.UPDATE),
+  ReviewController.updateReview
 );
 
 router.get("/:id", ReviewController.getDetailsReview);

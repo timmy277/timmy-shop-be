@@ -73,7 +73,7 @@ const updateReviewMine = (reviewId, userId, data) => {
           data: null,
           statusMessage: "Error",
         });
-      } else if (userId !== checkReview.user) {
+      } else if (userId !== checkReview.user.toString()) {
         reject({
           status: CONFIG_MESSAGE_ERRORS.UNAUTHORIZED.status,
           message: "Unauthorized",
@@ -83,7 +83,7 @@ const updateReviewMine = (reviewId, userId, data) => {
         });
       }
 
-      const updatedReview = await Review.findByIdAndUpdate(id, data, {
+      const updatedReview = await Review.findByIdAndUpdate(reviewId, data, {
         new: true,
       });
       resolve({
@@ -94,6 +94,7 @@ const updateReviewMine = (reviewId, userId, data) => {
         statusMessage: "Success",
       });
     } catch (e) {
+      console.log("reeeeeeeevoew", { e })
       reject(e);
     }
   });
@@ -253,7 +254,7 @@ const getAllReview = (params) => {
       if (search) {
         const searchRegex = { $regex: search, $options: "i" };
 
-        query.$or = [{ email: searchRegex }];
+        query.$or = [{ content: searchRegex }];
       }
 
       const totalCount = await Review.countDocuments(query);
@@ -264,6 +265,7 @@ const getAllReview = (params) => {
         content: 1,
         star: 1,
         product: 1,
+        created: 1,
         user: 1,
       };
 
@@ -271,13 +273,17 @@ const getAllReview = (params) => {
         const allReview = await Review.find(query)
           .sort(sortOptions)
           .select(fieldsToSelect)
-          .populate({
-            path: "user",
-            select: "avatar firstName lastName middleName _id",
-          }, {
-            path: "product",
-            select: "name _id",
-          });
+          .populate([
+            {
+              path: "user",
+              select: "avatar firstName lastName middleName _id",
+            },
+            {
+              path: "product",
+              select: "name _id",
+            }
+          ]
+          );
 
         resolve({
           status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
@@ -298,13 +304,16 @@ const getAllReview = (params) => {
         .limit(limit)
         .sort(sortOptions)
         .select(fieldsToSelect)
-        .populate({
-          path: "user",
-          select: "avatar firstName lastName middleName _id",
-        }, {
-          path: "product",
-          select: "name _id",
-        });
+        .populate(
+          [{
+            path: "user",
+            select: "avatar firstName lastName middleName _id",
+          },
+          {
+            path: "product",
+            select: "name _id",
+          }]
+        );
       resolve({
         status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
         message: "Success",
@@ -317,6 +326,7 @@ const getAllReview = (params) => {
         },
       });
     } catch (e) {
+      console.log("eeeeeeee", e);
       reject(e);
     }
   });
