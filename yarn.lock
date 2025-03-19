@@ -1249,6 +1249,11 @@ cron-parser@^4.2.0:
   dependencies:
     luxon "^3.2.1"
 
+crypto@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.npmjs.org/crypto/-/crypto-1.0.1.tgz"
+  integrity sha512-VxBKmeNcqQdiUQUW2Tzq0t377b54N2bMtXO/qiLa+6eRRmmC4qT3D4OnTGoT/U6O9aklQ/jTwbOtRMTTY8G0Ig==
+
 debug@^3.2.7:
   version "3.2.7"
   resolved "https://registry.npmjs.org/debug/-/debug-3.2.7.tgz"
@@ -1318,7 +1323,7 @@ doctrine@3.0.0:
   dependencies:
     esutils "^2.0.2"
 
-dotenv@^16.0.3:
+dotenv@^16.4.7:
   version "16.4.7"
   resolved "https://registry.npmjs.org/dotenv/-/dotenv-16.4.7.tgz"
   integrity sha512-47qPchRCykZC03FhkYAhrvwU4xDBFIj1QPqaarj6mdM/hgUzfPHcpkHJOn3mJAufFeeAxAzeGsr5X0M4k6fLZQ==
@@ -1946,6 +1951,11 @@ mkdirp@^1.0.3:
   resolved "https://registry.npmjs.org/mkdirp/-/mkdirp-1.0.4.tgz"
   integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
 
+moment@^2.30.1:
+  version "2.30.1"
+  resolved "https://registry.npmjs.org/moment/-/moment-2.30.1.tgz"
+  integrity sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==
+
 mongodb-connection-string-url@^2.6.0:
   version "2.6.0"
   resolved "https://registry.npmjs.org/mongodb-connection-string-url/-/mongodb-connection-string-url-2.6.0.tgz"
@@ -2152,6 +2162,13 @@ punycode@^2.1.1:
   resolved "https://registry.npmjs.org/punycode/-/punycode-2.3.1.tgz"
   integrity sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==
 
+qs@^6.14.0:
+  version "6.14.0"
+  resolved "https://registry.npmjs.org/qs/-/qs-6.14.0.tgz"
+  integrity sha512-YWWTjgABSKcvs/nWBi9PycY/JiPJqOD4JA6o9Sej2AtvSGarXxKC3OQSk4pAarbdQlKAh5D4FCQkJNkW+GAn3w==
+  dependencies:
+    side-channel "^1.1.0"
+
 qs@6.13.0:
   version "6.13.0"
   resolved "https://registry.npmjs.org/qs/-/qs-6.13.0.tgz"
@@ -2312,7 +2329,7 @@ side-channel-weakmap@^1.0.2:
     object-inspect "^1.13.3"
     side-channel-map "^1.0.1"
 
-side-channel@^1.0.6:
+side-channel@^1.0.6, side-channel@^1.1.0:
   version "1.1.0"
   resolved "https://registry.npmjs.org/side-channel/-/side-channel-1.1.0.tgz"
   integrity sha512-ZX99e6tRweoUXqR+VBrslhda51Nh5MTQwou5tnUDgbtyM0dBgmhEDtWGP/xbKn6hqfPRHujUNwz5fy/wbbhnpw==

@@ -15,6 +15,8 @@ const file = fs.readFileSync(path.resolve(__dirname, "../swagger.yaml"), "utf8")
 
 const swaggerDocument = YAML.parse(file);
 
+mongoose.set('strictQuery', true);
+
 const app = express();
 const port = process.env.PORT || 3001;
 

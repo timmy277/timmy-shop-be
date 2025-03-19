@@ -20,7 +20,7 @@ const createUrlPaymentVNPay = async (req, res) => {
       });
     }
 
-    const response = PaymentService.createUrlPaymentVNPay(req.body, ipAddr);
+    const response = await PaymentService.createUrlPaymentVNPay(req.body, ipAddr);
     const { data, status, typeError, message, statusMessage } = response;
     return res.status(status).json({
       typeError,
@@ -29,6 +29,7 @@ const createUrlPaymentVNPay = async (req, res) => {
       status: statusMessage,
     });
   } catch (e) {
+    console.log("payment",e);
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
       message: "Internal Server Error",
       data: null,
@@ -57,7 +58,7 @@ const getVNPayIpnPayment = async (req, res) => {
       });
     }
 
-    const response = PaymentService.getVNPayIpnPayment(req.body, ipAddr);
+    const response = await PaymentService.getVNPayIpnPayment(req.body, ipAddr);
     const { data, status, typeError, message, statusMessage } = response;
     return res.status(status).json({
       typeError,

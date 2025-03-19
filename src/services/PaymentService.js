@@ -1,5 +1,6 @@
 const { stat } = require('fs');
 const { CONFIG_MESSAGE_ERRORS } = require('../configs');
+const moment = require('moment');
 
 
 const createUrlPaymentVNPay = (data, ipAddr) => {
@@ -8,7 +9,7 @@ const createUrlPaymentVNPay = (data, ipAddr) => {
         try {
             let date = new Date();
 
-            let createDate = dateFormat(date, 'yyyymmddHHmmss');
+            let createDate = moment(date).format('YYYYMMDDHHmmss');
 
             let tmnCode = process.env.VNPAY_TMN_CODE;
             let secretKey = process.env.VNPAY_SECRET_KEY;
@@ -16,8 +17,8 @@ const createUrlPaymentVNPay = (data, ipAddr) => {
             let vnpUrl = process.env.VNPAY_RETURN_URL;
             let bankCode = data.bankCode || "NCB";
 
-            let orderInfo = req.body.orderDescription;
-            let orderType = req.body.orderType;
+            // let orderInfo = req.body.orderDescription;
+            // let orderType = req.body.orderType;
             let locale = language;
             if (locale === null || locale === '') {
                 locale = 'vn';
@@ -45,13 +46,22 @@ const createUrlPaymentVNPay = (data, ipAddr) => {
                 vnp_Params['vnp_BankCode'] = bankCode;
             }
 
+            const sortObject = (obj) => {
+                let sorted = {};
+                let keys = Object.keys(obj).sort();
+                for (let key of keys) {
+                    sorted[key] = obj[key];
+                }
+                return sorted;
+            };
+
             vnp_Params = sortObject(vnp_Params);
 
             let querystring = require('qs');
             let signData = querystring.stringify(vnp_Params, { encode: false });
             let crypto = require("crypto");
             let hmac = crypto.createHmac("sha512", secretKey);
-            let signed = hmac.update(new Buffer(signData, 'utf-8')).digest("hex");
+            let signed = hmac.update(Buffer.from(signData, 'utf-8')).digest("hex");
             vnp_Params['vnp_SecureHash'] = signed;
             vnpUrl += '?' + querystring.stringify(vnp_Params, { encode: false });
 
@@ -63,6 +73,7 @@ const createUrlPaymentVNPay = (data, ipAddr) => {
                 typeError: "",
             })
         } catch (e) {
+            console.log("pay ser",e);
             reject(e);
         }
     })
@@ -79,6 +90,15 @@ const getVNPayIpnPayment = (data) => {
 
             delete data["vnp_SecureHash"];
             delete data["vnp_SecureHashType"];
+
+            const sortObject = (obj) => {
+                let sorted = {};
+                let keys = Object.keys(obj).sort();
+                for (let key of keys) {
+                    sorted[key] = obj[key];
+                }
+                return sorted;
+            };
         
             vnp_Params = sortObject(vnp_Params);
 
@@ -87,7 +107,7 @@ const getVNPayIpnPayment = (data) => {
             let signData = querystring.stringify(vnp_Params, { encode: false });
             let crypto = require("crypto");
             let hmac = crypto.createHmac("sha512", secretKey);
-            let signed = hmac.update(new Buffer(signData, 'utf-8')).digest("hex");
+            let signed = hmac.update(Buffer.from(signData, 'utf-8')).digest("hex");
 
             let paymentStatus = "0";
             let checkOrderId = true

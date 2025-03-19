@@ -13,8 +13,8 @@ router.get('/config', (req, res) => {
   })
 })
 
-router.post("/create-payment-url", PaymentController.createUrlPaymentVNPay);
-router.get("/vnpay-ipn", PaymentController.getVNPayIpnPayment);
+router.post("/vnpay/create-payment-url", PaymentController.createUrlPaymentVNPay);
+router.get("/vnpay/vnpay-ipn", PaymentController.getVNPayIpnPayment);
 
 
 module.exports = router
