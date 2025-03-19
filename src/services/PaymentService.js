@@ -34,26 +34,16 @@ const createUrlPaymentVNPay = (data, ipAddr) => {
             // vnp_Params['vnp_Merchant'] = ''
             vnp_Params['vnp_Locale'] = locale;
             vnp_Params['vnp_CurrCode'] = currCode;
-            vnp_Params['vnp_TxnRef'] = codeOrder;
-            vnp_Params['vnp_OrderInfo'] = codeOrder;
+            vnp_Params['vnp_TxnRef'] = orderId;
+            vnp_Params['vnp_OrderInfo'] = "Thanh toán cho mã giao dịch" + codeOrder;
             vnp_Params['vnp_OrderType'] = "other";
             vnp_Params['vnp_Amount'] = totalPrice * 100;
             vnp_Params['vnp_ReturnUrl'] = returnUrl;
             vnp_Params['vnp_IpAddr'] = ipAddr;
-            vnp_Params['orderId'] = orderId;
             vnp_Params['vnp_CreateDate'] = createDate;
             if (bankCode !== null && bankCode !== '') {
                 vnp_Params['vnp_BankCode'] = bankCode;
             }
-
-            const sortObject = (obj) => {
-                let sorted = {};
-                let keys = Object.keys(obj).sort();
-                for (let key of keys) {
-                    sorted[key] = obj[key];
-                }
-                return sorted;
-            };
 
             vnp_Params = sortObject(vnp_Params);
 
@@ -63,7 +53,7 @@ const createUrlPaymentVNPay = (data, ipAddr) => {
             let hmac = crypto.createHmac("sha512", secretKey);
             let signed = hmac.update(Buffer.from(signData, 'utf-8')).digest("hex");
             vnp_Params['vnp_SecureHash'] = signed;
-            vnpUrl += '?' + querystring.stringify(vnp_Params, { encode: false });
+            vnpUrl += '?' + querystring.stringify(vnp_Params, { encode: false })
 
             resolve({
                 status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
@@ -73,7 +63,7 @@ const createUrlPaymentVNPay = (data, ipAddr) => {
                 typeError: "",
             })
         } catch (e) {
-            console.log("pay ser",e);
+            console.log("pay ser", e);
             reject(e);
         }
     })
@@ -84,25 +74,20 @@ const getVNPayIpnPayment = (data) => {
         try {
 
             let secureHash = data["vnp_SecureHash"];
-            
+
+            const { orderId, ...rests } = data
+
             let rspCode = data["vnp_ResponseCode"];
-            const orderId = data["orderId"];
 
             delete data["vnp_SecureHash"];
             delete data["vnp_SecureHashType"];
 
-            const sortObject = (obj) => {
-                let sorted = {};
-                let keys = Object.keys(obj).sort();
-                for (let key of keys) {
-                    sorted[key] = obj[key];
-                }
-                return sorted;
-            };
-        
+            let vnp_Params = { ...rests }
+
             vnp_Params = sortObject(vnp_Params);
 
             let secretKey = process.env.VNPAY_SECRET_KEY;
+
             let querystring = require('qs');
             let signData = querystring.stringify(vnp_Params, { encode: false });
             let crypto = require("crypto");
@@ -113,104 +98,65 @@ const getVNPayIpnPayment = (data) => {
             let checkOrderId = true
             let checkAmount = true
 
-            if(secureHash === signed) {
-                if(checkOrderId) {
-                    if(checkAmount){
-                        if(paymentStatus === "0"){
-                            if(rspCode === "00"){
-                                const existingOrder = await Order.findById(id)
-                                if(!existingOrder){
-                                    reject({
-                                        status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-                                        message: `Order with ID ${id} not found`,
-                                        typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
-                                        data: null,
-                                        statusMessage: "Error",
-                                    })
-                                    return
-                                }
-                                const currentTime = moment()
-                                const formattedTime = currentTime.format('YYYY-MM-DD HH:mm:ss')
-                                existingOrder.isPaid = 1
-                                existingOrder.paidAt = formattedTime
-                                existingOrder.status = 1
-                                
-                                const saveOrder = await existingOrder.save()
-                                resolve({
-                                    status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-                                    message: "Payment success",
-                                    statusMessage: "Success",
-                                    data: saveOrder,
-                                    typeError: "",
-                                })
-                            } else{
-                                res.status(200).json({
-                                    RspCode: "00",
-                                    Message: "Failed",
-                                })
-                                resolve({
-                                    status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-                                    message: 'Payment failed',
-                                    typeError: "",
-                                    data: {
-                                        RspCode: "00",},
-                                    statusMessage: "Success",
-                                })
-                            }
-                        } else{
-                            resolve({
-                                status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-                                message: 'This order has been updated',
-                                typeError: "",
-                                data: {
-                                    RspCode: "02",},
-                                statusMessage: "Success",
-                            })
-                        }
-                    } else{
-                        resolve({
-                            status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-                            message: 'Invalid amount',
-                            typeError: "",
-                            data: {
-                                RspCode: "04",},
-                            statusMessage: "Success",
-                        })
-                    }
-                }
-                else{
-                    resolve({
-                        status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-                        message: 'Order not found',
-                        typeError: "",
-                        data: {
-                            RspCode: "01",},
-                        statusMessage: "Success",
+            if (secureHash === signed) {
+                let orderId = vnp_Params["vnp_TxnRef"];
+                let rspCode = vnp_Params["vnp_ResponseCode"];
+                const existingOrder = await Order.findById(orderId)
+                if (!existingOrder) {
+                    reject({
+                        status: CONFIG_MESSAGE_ERRORS.INVALID.status,
+                        message: `Order with ID ${id} not found`,
+                        typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
+                        data: null,
+                        statusMessage: "Error",
                     })
+                    return
                 }
-            }
-            else{
+                const currentTime = moment()
+                const formattedTime = currentTime.format('YYYY-MM-DD HH:mm:ss')
+                existingOrder.isPaid = 1
+                existingOrder.paidAt = formattedTime
+                existingOrder.status = 1
+
+                const saveOrder = await existingOrder.save()
+                resolve({
+                    status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
+                    message: "Payment success",
+                    statusMessage: "Success",
+                    data: {RspCode: "00", totalPrice: saveOrder.totalPrice},
+                    typeError: "",
+                })
+            } else {
                 resolve({
                     status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-                    message: 'Checksum failed',
+                    message: 'Payment failed',
                     typeError: "",
                     data: {
-                        RspCode: "97",},
+                        RspCode: "97",
+                    },
                     statusMessage: "Success",
                 })
             }
-
-            resolve({
-                status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-                message: "Create Url success",
-                statusMessage: "Success",
-                data: vnpUrl,
-                typeError: "",
-            })
         } catch (e) {
             reject(e);
         }
     })
+}
+
+function sortObject(obj) {
+    let sorted = {};
+    let str = [];
+    let key;
+    for (key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            str.push(encodeURIComponent(key));
+        }
+    }
+    str.sort();
+    for (key = 0; key < str.length; key++) {
+        sorted[str[key]] = encodeURIComponent(obj[str[key]]).replace(/%20/g, "+");
+    }
+    return sorted;
 }
 
 module.exports = {
